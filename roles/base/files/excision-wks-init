@@ -4,6 +4,11 @@
 # user, so we have to define the folder we want
 wks_home="/var/lib/gnupg/wks"
 
+if ! command -v gpg > /dev/null; then
+	echo "gpg command seems not installed"
+	exit 1
+fi
+
 # this part ensures proper basic permissions
 # for each domain directory
 gpg-wks-server --list-domains
@@ -15,14 +20,14 @@ while read -r domain; do
 
 	# first check if it already exists
 	# if not then we create a key that lasts for ever
-	if ! gpg2 -K "wks@${domain}"; then
-		gpg2 --batch --passphrase "" --quick-gen-key "wks@$domain"
+	if ! gpg -K "wks@${domain}"; then
+		gpg --batch --passphrase "" --quick-gen-key "wks@$domain"
 	fi
 
 	# get the fingerprint, with the blank space
 	# (this part will break on gpg output format change, so
 	#   keep track of gnupg releases)
-	fingerprint=$(gpg2 -K "wks@${domain}" | sed "2q;d")
+	fingerprint=$(gpg -K "wks@${domain}" | sed "2q;d")
 
 	# now remove the empty space at the end
 	fingerprint=${fingerprint##*( )}
