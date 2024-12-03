@@ -1,6 +1,6 @@
 ---
 - name: rebuild login database
-  command: cap_mkdb /etc/login.conf
+  command: find /etc/login.conf.d/ -type f -exec cap_mkdb /etc/login.conf {} +
 
 - name: set hostname
   command: hostname "{{ hostname }}"

@@ -103,14 +103,19 @@
     modification_time: preserve
     access_time: preserve
 
-- name: generate login.conf
+- name: add login.conf class
   copy:
-    src: login.conf
-    dest: /etc/login.conf
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     force: true
     owner: root
     group: wheel
     mode: '0644'
+  loop:
+    - src: dovecot.login.conf
+      dest: /etc/login.conf.d/dovecot
+    - src: mysqld.login.conf
+      dest: /etc/login.conf.d/mysqld
   notify: rebuild login database
 
 - name: add daily-report cron job
