@@ -18,7 +18,7 @@ while read -r domain ; do
 		printf "### Generating/Checking DKIM certificates for domain: %s\n" "$domain"
 
 		if [ ! -e "$key_rsa" ]; then 
-			openssl genrsa -out "$key_rsa" 2048
+			openssl genrsa -out "$key_rsa" 4096
 		fi
 
 #		if [ ! -e "$key_ed"]; then
