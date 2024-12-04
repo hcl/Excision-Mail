@@ -4,7 +4,7 @@ base_packages:
   - "dovecot-pigeonhole--"
   - "gnupg"
   - "knot"
-  - "opensmtpd-extras"
+  - "opensmtpd-table-passwd"
   - "opensmtpd-filter-rspamd"
   - "opensmtpd-filter-senderscore"
   - "redis"
