@@ -14,9 +14,7 @@
     - role: nginx_core
     - role: acme
     - role: nginx_main_sites
-    - role: openldap
     - role: redis
-    # - role: clamav
     - role: rspamd
     - role: smtpd
     - role: dovecot

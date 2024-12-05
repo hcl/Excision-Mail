@@ -1,0 +1,21 @@
+---
+- name: Install/Upgrade Excision Mail main utilities
+
+  hosts:
+    - mainserver
+
+  vars_files:
+    - defaults.yml
+    - vars.yml
+    - extrapolate.yml
+    - overrides.yml
+
+  roles:
+    - role: nginx_core
+    - role: acme
+    - role: nginx_main_sites
+    - role: redis
+    - role: rspamd
+    - role: smtpd
+    - role: dovecot
+    - role: knot

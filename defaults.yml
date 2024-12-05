@@ -1,6 +1,8 @@
 ---
 mail_subdomain: mail
 
+install_type: extra
+
 required_subdomains:
   - openpgpkey
   - wkd
@@ -18,8 +20,8 @@ extra_subdomains:
   - dav
   - webmail
 
-subdomains: "{{ required_subdomains + extra_subdomains }}"
-
+subdomains: "{% if install_type == 'minimal' %}{{required_subdomains}}{% elif install_type == 'full' %}{{required_subdomains+optional_subdomains}}{% elif install_type == 'extra' %}{{required_subdomains+optional_subdomains+extra_subdomains}}{% endif %}"
+ 
 timezone: "Etc/UTC"
 
 #####
