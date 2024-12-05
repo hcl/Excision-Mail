@@ -7,7 +7,7 @@
 virtuals="$user_home/virtual"
 revirt="$user_home/revirt"
 allowed="$user_home/spamd.alloweddomains"
-bak=$(date +%Y%d%m%H%M)
+bak="bak"
 
 if [ -e "$virtuals" ]; then
 	mv "$virtuals" "$virtuals.$bak"
