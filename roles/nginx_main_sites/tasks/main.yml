@@ -28,6 +28,7 @@
     mode: '0644'
   with_items: "{{ domains }}"
   notify: restart nginx
+  when: install_type == 'full'
 
 - name: symlink extras proxy config
   file:
@@ -38,6 +39,7 @@
     state: link
   with_items: "{{ domains }}"
   notify: restart nginx
+  when: install_type == 'full'
 
 - name: flush_handlers
   meta: flush_handlers
