@@ -1,0 +1,31 @@
+---
+- name: init unbound trust anchor
+  command: unbound-anchor
+  register: __unbound_anchor
+  changed_when: __unbound_anchor.rc == 1
+  failed_when: __unbound_anchor.rc != 1 and __unbound_anchor.rc != 0
+
+- name: copy zone file
+  copy:
+    src: named.root
+    dest: /var/unbound/db/root.zone
+    owner: root
+    group: _unbound
+    mode: "0640"
+
+- name: copy unbound configuration
+  copy:
+    src: unbound.conf
+    dest: /var/unbound/etc/unbound.conf
+    owner: root
+    group: wheel
+    mode: "0644"
+  notify: restart unbound
+
+- name: enable unbound
+  service:
+    name: unbound
+    enabled: true
+
+- name: flush_handlers
+  meta: flush_handlers
