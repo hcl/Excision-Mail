@@ -51,16 +51,16 @@
   with_items: "{{ dovecot_config_files }}"
   notify: restart dovecot
 
-- name: symlink dovecot ldap config
-  file:
-    src: "dovecot-ldap.conf.ext"
-    dest: "/etc/dovecot/dovecot-ldap-{{ item.name }}.conf.ext"
-    state: link
-    force: true
-  with_items:
-    - {name: "passdb"}
-    - {name: "userdb"}
-  notify: restart dovecot
+#- name: symlink dovecot ldap config
+#  file:
+#    src: "dovecot-ldap.conf.ext"
+#    dest: "/etc/dovecot/dovecot-ldap-{{ item.name }}.conf.ext"
+#    state: link
+#    force: true
+#  with_items:
+#    - {name: "passdb"}
+#    - {name: "userdb"}
+#  notify: restart dovecot
 
 - name: flush_handlers
   meta: flush_handlers

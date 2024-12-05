@@ -1,6 +1,7 @@
 ---
 - name: restart dovecot
-  service:
-    name: dovecot
-    enabled: true
-    state: restarted
+  command: echo
+  #service:
+  #  name: dovecot
+  #  enabled: true
+  #  state: restarted
