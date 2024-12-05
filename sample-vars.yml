@@ -19,6 +19,7 @@
 domains:
   - name: <change-me> # e.g. bsd.ac
     dns: true         # HIGHLY RECOMMENDED, defaults to false if not present
+    dkim_type: rsa
   #- name: domain2.tld
   #  dns: false
   #- name: domain3.tld3

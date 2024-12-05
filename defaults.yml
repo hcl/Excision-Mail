@@ -7,6 +7,8 @@ required_subdomains:
   - autoconfig
   - autodiscover
   - mta-sts
+
+optional_subdomains:
   - imap
   - pop3
   - smtp
@@ -18,7 +20,7 @@ extra_subdomains:
 
 subdomains: "{{ required_subdomains + extra_subdomains }}"
 
-timezone: "America/New_York"
+timezone: "Etc/UTC"
 
 #####
 # Username delimiter to give all users access to infinite aliases
@@ -58,3 +60,10 @@ syslog_extra_logfiles:
   - {file: "/var/log/clamd", program: "clamd"}
   - {file: "/var/log/freshclam", program: "freshclam"}
   - {file: "/var/log/rspamd/rspamd.log", user: "_rspamd", group: "_rspamd", count: 1, command: "pkill -USR1 -u _rspamd -U _rspamd -x rspamd"}
+
+dkim_key_type: rsa
+dkim_selector:
+  rsa: excisionRSA
+  ed25519: excisionED
+
+migration: false

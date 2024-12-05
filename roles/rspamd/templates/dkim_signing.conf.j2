@@ -2,10 +2,32 @@ allow_username_mismatch = true;
 
 domain {
 {% for domain in domains %}
+{% with %} 
+{% set current_dkim_key_type = domain.dkim_key_type | default(dkim_key_type) %}
+{% if current_dkim_key_type == 'rsa' or current_dkim_key_type == 'ed25519' %}
+{% with %}
+{% set current_dkim_selector = domain.dkim_selector[current_dkim_key_type] | default(dkim_selector[current_dkim_key_type]) %}
     {{ domain.name }} {
-        path = "/etc/excision/dkim/private/excisionRSA.{{ domain.name }}.key";
-        selector = "excisionRSA";
+        path = "/etc/excision/dkim/private/{{ domain.name }}.{{ current_dkim_selector }}.{{ current_dkim_key_type }}.key";
+        selector = "{{ current_dkim_selector }}";
     }
+{% endwith %}
+{% elif current_dkim_key_type == 'both' %}
+    {{ domain.name }} {
+        selectors [
+{% for key_type in ['rsa', 'ed25519'] %}
+{% with %}
+{% set current_dkim_selector = domain.dkim_selector[key_type] | default(dkim_selector[key_type]) %}
+            {
+               path = "/etc/excision/dkim/private/{{ domain.name }}.{{ current_dkim_selector }}.{{ key_type }}.key";
+               selector = "{{ current_dkim_selector }}";
+            },
+{% endwith %}
+{% endfor %}
+        ]
+    }
+{% endif %}
+{% endwith %}
 {% endfor %}
 }
 
