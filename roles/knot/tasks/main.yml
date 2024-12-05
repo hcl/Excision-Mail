@@ -1,4 +1,9 @@
 ---
+- name: install knot packages
+  package:
+    name: "{{ base_packages }}"
+    state: present
+
 - name: generate knot config
   template:
     src: knot.conf.j2

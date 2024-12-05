@@ -3,7 +3,6 @@ base_packages:
   - "dovecot--"
   - "dovecot-pigeonhole--"
   - "gnupg"
-  - "knot"
   - "opensmtpd-table-passwd"
   - "opensmtpd-filter-rspamd"
   - "opensmtpd-filter-senderscore"
