@@ -1,12 +1,10 @@
 ---
 pf_ssh_port: ssh
 
-pf_default_udp_ports:
-  - domain
+pf_default_udp_ports: []
 
 pf_default_tcp_ports:
   - smtp
-  - domain
   - http
   - https
 
@@ -17,6 +15,12 @@ pf_default_tcp_ports_protected:
   - imaps
   - pop3s
   - sieve
+
+pf_service_udp_ports:
+  - domain
+
+pf_service_tcp_ports:
+  - domain
 
 pf_extra_udp_ports: []
 pf_extra_tcp_ports: []
