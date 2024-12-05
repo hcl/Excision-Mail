@@ -1,7 +1,7 @@
 ---
 - name: restart dovecot
-  command: echo
-  #service:
-  #  name: dovecot
-  #  enabled: true
-  #  state: restarted
+  service:
+    name: dovecot
+    enabled: true
+    state: restarted
+    when: migration is false

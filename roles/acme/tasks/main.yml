@@ -12,6 +12,7 @@
   register: renew_certs
   failed_when: renew_certs.rc == 1
   changed_when: renew_certs.rc == 0
+  when: migration is false
 
 - name: create symlinks for certificates
   file:
@@ -23,3 +24,4 @@
   with_nested:
     - "{{ padding }}"
     - "{{ domains }}"
+  when: migration is false

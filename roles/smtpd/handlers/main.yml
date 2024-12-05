@@ -3,3 +3,4 @@
   service:
     name: smtpd
     state: restarted
+    when: migration is false
