@@ -13,7 +13,6 @@ dovecot_config_files:
   - {name: "20-lmtp.conf"}
   - {name: "20-managesieve.conf"}
   - {name: "90-plugin.conf"}
-  - {name: "90-quota.conf"}
   - {name: "90-sieve-extprograms.conf"}
   - {name: "auth-ldap.conf.ext"}
   - {name: "auth-passwdfile.conf.ext"}
@@ -34,6 +33,7 @@ dovecot_templates:
   - {name: "10-ssl.conf"}
   - {name: "15-lda.conf"}
   - {name: "90-sieve.conf"}
+  - {name: "90-quota.conf"}
   - {name: "00-wks.sieve", path: "/var/dovecot/sieve/before", user: "excision", group: "excision", mode: "0660"}
 
 dovecot_virtual: false
