@@ -17,6 +17,7 @@ dovecot_config_files:
   - {name: "auth-ldap.conf.ext"}
   - {name: "auth-passwdfile.conf.ext"}
   - {name: "dovecot-trash.conf.ext"}
+  - {name: "local.conf"}
 
 dovecot_sieve_files:
   - {name: "report-ham.sieve", mode: "0660"}
