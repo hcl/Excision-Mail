@@ -13,3 +13,9 @@
   failed_when: renew_certs.rc == 1
   changed_when: renew_certs.rc == 0
   when: migration is false
+
+- name: generate dane record
+  command: excision gen-dane "{{ mail_subdomain }}" "{{ item.name }}" "{{ item.ssl_key_type|default(ssl_key_type) }}"
+  register: __gen_dane
+  failed_when: __gen_dane.rc != 0 and __gen_dane.rc != 1
+  with_items: "{{ domains }}"

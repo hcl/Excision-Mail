@@ -1,16 +1,23 @@
 ---
+- name: install zone packages
+  package:
+    name: "{{ zone_packages }}"
+    state: present
+
 - name: generate zone main files
   template:
     src: domain.zone.j2
     dest: "/etc/excision/nsd/{{ item.name }}.zone"
-    mode: '0644'
+    mode: "0644"
     owner: root
     group: wheel
   with_items: "{{ domains }}"
 
-- name: generate dkim certificates   # noqa no-changed-when
+- name: generate dkim certificates # noqa no-changed-when
   command: excision ensure-dkim
+  when: migration is false
 
-- name: generate zone final files   # noqa no-changed-when
+- name: generate zone final files # noqa no-changed-when
   command: excision ensure-zone "{{ item.name }}" 0
   with_items: "{{ domains }}"
+  when: item.dns == True

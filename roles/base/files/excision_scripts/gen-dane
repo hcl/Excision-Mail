@@ -1,0 +1,52 @@
+#!/bin/ksh
+
+set -e -u -o pipefail
+
+. /usr/local/lib/excision/helpers/variables
+
+# this script generate and append dane record to 
+# domain's template zone file, and assuming it
+# exists in the /etc/excision/nsd folder
+
+if [ "$#" -ne 3 ]; then
+	echo "Incorrect number of arguments to gen-dane: mailname domain keytype"
+	exit 255
+fi
+
+mailname="$1"
+domain="$2"
+key_type="$3"
+current_domain="${mailname}.${domain}"
+
+dane_zone_file="$nsd_home/$domain.dane.zone"
+dane_zone_file_bak="$dane_zone_file".bak
+dane_zone_file_tmp="$dane_zone_file".tmp
+
+cert_path="$ssl_home/$domain.pem"
+
+if [ ! -f "$cert_path" ]; then 
+	echo "not found certificate for $domain: $cert_path"
+	exit 1
+fi
+
+if [ "$key_type" == "ecc" ]; then
+	tlsa_rr=$(openssl x509 -in $cert_path -pubkey -noout | openssl ec -pubin -outform der | sha256)
+else
+	tlsa_rr=$(openssl x509 -in $cert_path -pubkey -noout | openssl rsa -pubin -outform der | sha256)
+fi
+
+cat > $dane_zone_file_tmp <<EOF
+tlsa._dane.$current_domain	86400	IN	TLSA	3 1 1 $tlsa_rr
+
+_993._tcp.$current_domain	86400	IN	CNAME	tlsa._dane.$current_domain
+_587._tcp.$current_domain	86400	IN	CNAME	tlsa._dane.$current_domain
+_443._tcp.$current_domain	86400	IN	CNAME	tlsa._dane.$current_domain
+_25._tcp.$current_domain	86400	IN	CNAME	tlsa._dane.$current_domain
+EOF
+
+sh "$vfix" _knot wheel 660 "$dane_zone_file_tmp"
+
+if [ -f "$dane_zone_file" ]; then
+	mv "$dane_zone_file" "$dane_zone_file_bak"
+fi
+mv "$dane_zone_file_tmp" "$dane_zone_file"

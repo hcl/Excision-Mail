@@ -1,7 +1,7 @@
 ---
 mail_subdomain: mail
 
-install_type: extra
+install_type: minimal
 
 required_subdomains:
   - openpgpkey
@@ -50,6 +50,7 @@ openldap_schemas_extra:
 extras_ip: 127.0.0.1
 extras_port: 8081
 
+ssl_key_type: rsa
 
 dkim_key_type: rsa
 dkim_selector:

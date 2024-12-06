@@ -18,8 +18,9 @@
 #           https://excision.bsd.ac/guides/manualdns/
 domains:
   - name: <change-me> # e.g. bsd.ac
-    dns: true         # HIGHLY RECOMMENDED, defaults to false if not present
-    dkim_type: rsa
+    dns: true # HIGHLY RECOMMENDED, defaults to false if not present
+    ssl_key_type: rsa # Choose between 'rsa' and 'ecc'
+    dkim_key_type: rsa # Choose among 'rsa', 'ecc' or 'both'
   #- name: domain2.tld
   #  dns: false
   #- name: domain3.tld3
