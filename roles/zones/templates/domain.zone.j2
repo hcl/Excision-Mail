@@ -1,6 +1,8 @@
 $TTL	10800
 $ORIGIN	{{ item.name }}.
 
+
+{% if public_nameservers is defined %}
 @	1d	SOA	{{ public_nameservers[0].name }}.	webmaster.{{ item.name }}. (
 	1000000			; serial - unused - knot will setup its own serial management
 	4h			; refresh
@@ -8,6 +10,7 @@ $ORIGIN	{{ item.name }}.
 	1w			; expire
 	2m			; minimum
 )
+{% endif %}
 
 ;; ttl has been removed from all records in favor of the default ttl
 ;; defined above, this makes the config a lot more understandable
@@ -24,9 +27,11 @@ $ORIGIN	{{ item.name }}.
 
 ; we set the acceptable nameservers for this domain
 ; don't trust cloudflare
+{% if public_nameservers is defined %}
 {% for ps in public_nameservers %}
 @	IN	NS	{{ ps.name }}.
 {% endfor %}
+{% endif %}
 
 ; these are the domain names that will be accepted on this server
 {% if ipv4 is defined %}
@@ -52,14 +57,8 @@ $ORIGIN	{{ item.name }}.
 ; gives an extra layer of encryption
 ;; strict transport security
 ; somewhat like DANE but doesn't need DNSSEC
-{% for sdomain in {{ [ mail_subdomain ] + required_subdomains + extra_subdomains }} %}
-{% if ipv4 is defined %}
-{{ sdomain }}	IN	A	{{ ipv4 }}
-{% endif %}
-{% if ipv6 is defined %}
-{{ sdomain }}	IN	AAAA	{{ ipv6 }}
-{% endif %}
-
+{% for sdomain in required_subdomains + extra_subdomains %}
+{{ sdomain }}	IN	CNAME {{ mail_subdomain }}.{{ item.name }}.
 {% endfor %}
 
 ;; SRV record format: https://en.wikipedia.org/wiki/SRV_record#Record_format
@@ -68,19 +67,19 @@ $ORIGIN	{{ item.name }}.
 ;;							(used for load balancing on client side,
 ;;							which makes it basically worthless)
 ; we also detail all the services used and the ports that they map to
-_openpgpkey._tcp	IN	SRV	0	0	443	openpgpkey.{{ item.name }}.
 ; we need autodiscover service >.> why so much???
 ; damn you microsoft
 _autodiscover._tcp	IN	SRV	0	0	443	autodiscover.{{ item.name }}.
 ; submission's' is the SSL/TLS port while without the 's' is the STARTTLS
-_submissions._tcp	IN	SRV	0	1	465	smtp.{{ item.name }}. ; SSL/TLS
-_submission._tcp	IN	SRV	5	1	587	smtp.{{ item.name }}. ; STARTTLS (but enforced)
-_imaps._tcp	IN	SRV	0	1	993	imap.{{ item.name }}.
-_pop3s._tcp	IN	SRV	0	1	995	pop3.{{ item.name }}.
+_submissions._tcp	IN	SRV	0	1	465	{{ mail_subdomain }}.{{ item.name }}. ; SSL/TLS
+_submission._tcp	IN	SRV	5	1	587	{{ mail_subdomain }}.{{ item.name }}. ; STARTTLS (but enforced)
+_imaps._tcp	IN	SRV	0	1	993	{{ mail_subdomain }}.{{ item.name }}.
+_pop3s._tcp	IN	SRV	0	0	0	.
 ; we disable insecure POP3 and insecure IMAP from being automatically detected
 ; mayhaps you can override them on a client but just don't use them
 _imap._tcp	IN	SRV	0	0	0	.
 _pop3._tcp	IN	SRV	0	0	0	.
+{% if install_type == 'extra' %}
 ; setup caldavs and carddavs accounts urls
 _carddav._tcp	IN	SRV	5	1	80	dav.{{ item.name }}.
 _carddavs._tcp	IN	SRV	0	1	443	dav.{{ item.name }}.
@@ -88,7 +87,7 @@ _caldav._tcp	IN	SRV	5	1	80	dav.{{ item.name }}.
 _caldavs._tcp	IN	SRV	0	1	443	dav.{{ item.name }}.
 ; ischedule information for calendars to talk with each other
 _ischedules._tcp  IN  SRV 0 1 443 dav.{{ item.name }}.
-
+{% endif %}
 ; we also need to setup the acceptable mail server in the SPF record
 @	IN	TXT	"v=spf1 mx ~all"
 _dmarc	IN	TXT	"v=DMARC1;p=reject;pct=100;rua=mailto:dmarcreports@{{ item.name }};"
@@ -96,5 +95,3 @@ _dmarc	IN	TXT	"v=DMARC1;p=reject;pct=100;rua=mailto:dmarcreports@{{ item.name }}
 _smtp._tls	IN	TXT	"v=TLSRPTv1;rua=mailto:tlsreports@{{ item.name }};"
 _mta-sts	IN	TXT	"v=STSv1;id=MTA_STS_SERIAL;"
 
-; SSHFP records are added here to make sure that
-; DNS validation can be done before connection
