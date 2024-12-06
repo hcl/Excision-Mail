@@ -1,23 +1,44 @@
-smtpd_aliases:
-  - "excision"
-  - "postmaster"
-  - "abuse"
-  - "noc"
-  - "security"
-  - "hostmaster"
-  - "usenet"
-  - "news"
-  - "webmaster"
-  - "dmarcreports"
-  - "tlsreports"
+---
+full_rfc2142_address: False
+
+rfc2142_address:
+  noc:
+    - "abuse"
+    - "noc"
+    - "security"
+  serv:
+    - "postmaster"
+    - "webmaster"
+    - "hostmaster"
+  optional:
+    - "usenet"
+    - "newsmaster"
+
+smtpd_aliases_required: "{{ rfc2142_address.noc + rfc2142_address.serv + [ 'dmarcreports', 'tlsreports'] }}"
+
+smtpd_aliases_extra:
   - "calendar"
 
+smtpd_aliases_constructed: >-
+  {% if full_rfc2142_address %}
+  {% set smtpd_aliases_current = smtpd_aliases_required + rfc2142_address.optional %}
+  {% else %}
+  {% set smtpd_aliases_current = smtpd_aliases_required %}
+  {% endif %}
+  {% if install_type == 'extra' %}
+  {{ smtpd_aliases_current + smtpd_aliases_extra }}
+  {% else %}
+  {{ smtpd_aliases_current }}
+  {% endif %}
+
+smtpd_aliases: "{{ smtpd_aliases_constructed|from_yaml }}"
+
 smtpd_tables:
-  - {name: "aliases", user: "root", group: "wheel", perm: "0640"}
-  - {name: "mailname", user: "root", group: "wheel", perm: "0640"}
-  - {name: "virtual", user: "root", group: "_smtpd", perm: "0640"}
-  - {name: "revirt", user: "root", group: "_smtpd", perm: "0640"}
-  - {name: "vdomains", user: "root", group: "wheel", perm: "0644"}
-  - {name: "passwd", user: "_smtpd", group: "_dovecot", perm: "0440"}
+  - { name: "aliases", user: "root", group: "wheel", perm: "0640" }
+  - { name: "mailname", user: "root", group: "wheel", perm: "0640" }
+  - { name: "virtual", user: "root", group: "_smtpd", perm: "0640" }
+  - { name: "revirt", user: "root", group: "_smtpd", perm: "0640" }
+  - { name: "vdomains", user: "root", group: "wheel", perm: "0644" }
+  - { name: "passwd", user: "_smtpd", group: "_dovecot", perm: "0440" }
 
 smtpd_legacy_protocols: false

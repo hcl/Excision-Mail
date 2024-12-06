@@ -19,6 +19,7 @@ www: postmaster
 
 # Redirections for pseudo accounts that should not receive mail
 _bgpd: /dev/null
+_bgplgd: /dev/null
 _dhcp: /dev/null
 _dpb: /dev/null
 _dvmrpd: /dev/null
@@ -59,7 +60,6 @@ _smtpq: /dev/null
 _sndio: /dev/null
 _snmpd: /dev/null
 _spamd: /dev/null
-_switchd: /dev/null
 _syslogd: /dev/null
 _tcpdump: /dev/null
 _traceroute: /dev/null
@@ -79,19 +79,25 @@ _syspatch: /dev/null
 _slaacd: /dev/null
 sshd:   /dev/null
 
-# RFC 2142: SUPPORT MAILBOX NAMES FOR SPECIFIC INTERNET SERVICES
-hostmaster:	postmaster
-usenet:		postmaster
-news:		postmaster
-webmaster:	postmaster
-ftp:		postmaster
-
 # Well-known aliases -- these should be filled in!
-manager:	postmaster
-dumper:		postmaster
+# root:
+# manager:
+# dumper:
+
+# RFC 2142: NETWORK OPERATIONS MAILBOX NAMES
+abuse:		root
+# noc:		root
+security:	root
+
+# RFC 2142: SUPPORT MAILBOX NAMES FOR SPECIFIC INTERNET SERVICES
+hostmaster:		postmaster
+usenet:			postmaster
+newsmaster:		usenet
+webmaster:		postmaster
+ftp:			postmaster
 
 # Excision created users
 excision:		postmaster
 
-# We forward root to the admin account
+# We forward root to the mail admin account
 postmaster:	{{ admin }}@{{ domains[0].name }}
