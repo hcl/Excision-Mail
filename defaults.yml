@@ -3,9 +3,10 @@ mail_subdomain: mail
 
 install_type: minimal
 
+convenient_subdomain: False
+
 required_subdomains:
   - openpgpkey
-  - wkd
   - autoconfig
   - autodiscover
   - mta-sts
@@ -20,8 +21,20 @@ extra_subdomains:
   - dav
   - webmail
 
-subdomains: "{% if install_type == 'minimal' %}{{required_subdomains}}{% elif install_type == 'full' %}{{required_subdomains+optional_subdomains}}{% elif install_type == 'extra' %}{{required_subdomains+optional_subdomains+extra_subdomains}}{% endif %}"
- 
+subdomains_constructed: >-
+  {% if convenient_subdomain %}
+  {% set convenient_subdomain_list = optional_subdomains %}
+  {% else %}
+  {% set convenient_subdomain_list = [] %}
+  {% endif %}
+  {% if install_type == 'extra' %}
+    {{ required_subdomains + convenient_subdomain_list + extra_subdomains }}
+  {% else %}
+    {{ required_subdomains + convenient_subdomain_list }}
+  {% endif %}
+
+subdomains: "{{ subdomains_constructed|from_yaml }}"
+
 timezone: "Etc/UTC"
 
 #####
@@ -33,10 +46,10 @@ timezone: "Etc/UTC"
 username_delimiter: "+"
 
 #####
-max_attachment_size: 32  # in MB
+max_attachment_size: 32 # in MB
 
 openldap_schemas_extra:
-  - 'excision-mail.schema'
+  - "excision-mail.schema"
 
 ##### webmail, caldav and carddav
 #

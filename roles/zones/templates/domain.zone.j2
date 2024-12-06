@@ -57,7 +57,7 @@ $ORIGIN	{{ item.name }}.
 ; gives an extra layer of encryption
 ;; strict transport security
 ; somewhat like DANE but doesn't need DNSSEC
-{% for sdomain in required_subdomains + extra_subdomains %}
+{% for sdomain in subdomains %}
 {{ sdomain }}	IN	CNAME {{ mail_subdomain }}.{{ item.name }}.
 {% endfor %}
 
@@ -71,9 +71,9 @@ $ORIGIN	{{ item.name }}.
 ; damn you microsoft
 _autodiscover._tcp	IN	SRV	0	0	443	autodiscover.{{ item.name }}.
 ; submission's' is the SSL/TLS port while without the 's' is the STARTTLS
-_submissions._tcp	IN	SRV	0	1	465	{{ mail_subdomain }}.{{ item.name }}. ; SSL/TLS
-_submission._tcp	IN	SRV	5	1	587	{{ mail_subdomain }}.{{ item.name }}. ; STARTTLS (but enforced)
-_imaps._tcp	IN	SRV	0	1	993	{{ mail_subdomain }}.{{ item.name }}.
+_submissions._tcp	IN	SRV	0	1	465	{{ mail_subdomain if not convenient_subdomain else 'smtp' }}.{{ item.name }}. ; SSL/TLS
+_submission._tcp	IN	SRV	5	1	587	{{ mail_subdomain if not convenient_subdomain else 'smtp' }}.{{ item.name }}. ; STARTTLS (but enforced)
+_imaps._tcp	IN	SRV	0	1	993	{{ mail_subdomain if not convenient_subdomain else 'imap'}}.{{ item.name }}.
 _pop3s._tcp	IN	SRV	0	0	0	.
 ; we disable insecure POP3 and insecure IMAP from being automatically detected
 ; mayhaps you can override them on a client but just don't use them

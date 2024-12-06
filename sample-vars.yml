@@ -21,6 +21,9 @@ domains:
     dns: true # HIGHLY RECOMMENDED, defaults to false if not present
     ssl_key_type: rsa # Choose between 'rsa' and 'ecc'
     dkim_key_type: rsa # Choose among 'rsa', 'ecc' or 'both'
+    dkim_selector:
+      - rsa: excisionRSA
+      - ed25519: excisionED
   #- name: domain2.tld
   #  dns: false
   #- name: domain3.tld3
