@@ -57,10 +57,10 @@ table	submission-address \
 # Local messages
 listen on socket \
 	filter rspamd
-#
-# Private interfaces
 {% if pf_private_interfaces is defined %}
 {% for pif in pf_private_interfaces %}
+#
+# Private interfaces
 listen on {{ pif }}
 listen on {{ pif }} \
 	tag trusted-interface \

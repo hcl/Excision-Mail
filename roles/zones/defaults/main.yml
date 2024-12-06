@@ -1,3 +1,2 @@
 ---
-zone_packages:
-  - ldns-utils
+zone_packages: []
