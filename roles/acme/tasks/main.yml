@@ -13,15 +13,3 @@
   failed_when: renew_certs.rc == 1
   changed_when: renew_certs.rc == 0
   when: migration is false
-
-- name: create symlinks for certificates
-  file:
-    src: "/etc/excision/ssl/{{ item[0].prefix | default('') }}{{ item[1].name }}{{ item[0].suffix }}"
-    dest: "/etc/ssl/{{ item[0].prefix | default('') }}{{ item[1].name }}{{ item[0].suffix }}"
-    owner: root
-    group: wheel
-    state: link
-  with_nested:
-    - "{{ padding }}"
-    - "{{ domains }}"
-  when: migration is false
