@@ -4,7 +4,9 @@
 
 . /usr/local/lib/excision/helpers/variables
 
+# <virtuals> is for inbound
 virtuals="$user_home/virtual"
+# <revirt> is for outbound
 revirt="$user_home/revirt"
 allowed="$user_home/spamd.alloweddomains"
 bak="bak"
@@ -36,14 +38,10 @@ for user_file in "$user_home/user-data/"*; do
 	printf "\n" >> "$revirt"
 done
 
-cp "$virtuals" /etc/mail/virtual
-cp "$revirt" /etc/mail/revirt
-cp "$allowed" /etc/mail/spamd.alloweddomains
-chmod 640 /etc/mail/virtual /etc/mail/revirt /etc/mail/spamd.alloweddomains
-chown root:_smtpd /etc/mail/virtual /etc/mail/revirt /etc/mail/spamd.alloweddomains
-cp "$user_home/passwd" /etc/mail/passwd
-chmod 440 /etc/mail/passwd
-chown _smtpd:_dovecot /etc/mail/passwd
+install -m 640 -o root -g _smtpd "$virtuals" /etc/mail/virtual
+install -m 640 -o root -g _smtpd "$revirt" /etc/mail/revirt
+install -m 640 -o root -g _smtpd "$allowed" /etc/mail/spamd.alloweddomains
+install -m 440 -o _smtpd -g _dovecot "$user_home/passwd" /etc/mail/passwd
 
 # Reload information for services
 #supposedly dovecot automatically reloads the changes
@@ -52,4 +50,3 @@ rcctl reload dovecot
 smtpctl update table passwd
 smtpctl update table virtuals
 smtpctl update table revirt 
-

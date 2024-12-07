@@ -6,15 +6,21 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 HELP=$(cat <<-END
-usage:  excision add-alias alias@domainA.tldA user@domainB.tldB
-        excision add-user user@domain.tld [1]
-        excision add-user-key | change-passwd | deleteall-user-keys
-                 user@domain.tld
-        excision daily-report | ensure-dkim | ensure-gpg | fix-perms |
-                 renew-certs | show-stats | userdb-check | virtual-regen
+usage:  excision add-alias [alias@domainA.tldA] [user@domainB.tldB]
+        excision add-user [user@domain.tld]
+        excision change-passwd [user@domain.tld]
+        excision daily-report
+        excision ensure-dkim
+        excision ensure-gpg
         excision ensure-zone [domain.tld]
-        excision whitelist-bigmailer domain.tld
-        excision whitelist-friend IP
+        excision fix-perms
+        excision gen-virtual
+        excision gen-dane [mailname domain keytype]
+        excision renew-certs
+        excision show-stats
+        excision userdb-check
+        excision whitelist-bigmailer [domain.tld]
+        excision whitelist-friend [IP]
 END
 )
 

@@ -30,13 +30,10 @@ cat "$dkim_home/davRSA.$domain.txt" >> "$zone_file_temp"
 
 printf "\n" >> "$zone_file_temp"
 
-sh "$vfix" _knot wheel 660 "$zone_file_temp"
-
 echo "freezing zone"
 knotc zone-freeze "$domain"
 
-mv "$zone_file_orig" "$zone_file_back"
-mv "$zone_file_temp" "$zone_file_orig"
+install -b -o _knot -g wheel -m 660 "$zone_file_temp" "$zone_file_orig"
 
 echo "checking new zone file"
 if knotc zone-check "$domain"; then

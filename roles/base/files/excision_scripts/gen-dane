@@ -19,7 +19,6 @@ key_type="$3"
 current_domain="${mailname}.${domain}"
 
 dane_zone_file="$nsd_home/$domain.dane.zone"
-dane_zone_file_bak="$dane_zone_file".bak
 dane_zone_file_tmp="$dane_zone_file".tmp
 
 cert_path="$ssl_home/$domain.pem"
@@ -44,9 +43,4 @@ _443._tcp.$current_domain	86400	IN	CNAME	tlsa._dane.$current_domain
 _25._tcp.$current_domain	86400	IN	CNAME	tlsa._dane.$current_domain
 EOF
 
-sh "$vfix" _knot wheel 660 "$dane_zone_file_tmp"
-
-if [ -f "$dane_zone_file" ]; then
-	mv "$dane_zone_file" "$dane_zone_file_bak"
-fi
-mv "$dane_zone_file_tmp" "$dane_zone_file"
+install -b -m 660 -o _knot -g wheel "$dane_zone_file_tmp" "$dane_zone_file"
