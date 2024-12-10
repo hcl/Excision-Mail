@@ -2,18 +2,18 @@
 - name: make excision group
   group:
     name: excision
+    gid: 2000
 
 - name: make excision user
   user:
     name: excision
     comment: Excision Mail executor
+    uid: 2000
     group: excision
     groups: ""
     login_class: daemon
-    shell: /bin/ksh
+    shell: /sbin/nologin
     home: /var/excision
-    password_lock: true
-    password: "*************"
 
 - name: disable logins for excision user
   file:
