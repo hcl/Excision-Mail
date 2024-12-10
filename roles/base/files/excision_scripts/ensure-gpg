@@ -30,4 +30,4 @@ mkdir -p /var/www/openpgpkey
 chown -R excision:excision /var/www/openpgpkey
 
 # now do the bulk of the init using the excision account
-su -l excision -c "sh /var/excision-home/excision-wks-init"
+su excision -c "sh /var/excision-home/excision-wks-init"
