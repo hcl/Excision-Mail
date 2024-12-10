@@ -11,13 +11,6 @@
 			<authentication>password-cleartext</authentication>
 			<username>%EMAILADDRESS%</username>
 		</incomingServer>
-		<incomingServer type="pop3">
-			<hostname>pop3.{{ item.name }}</hostname>
-			<port>995</port>
-			<socketType>SSL</socketType>
-			<authentication>password-cleartext</authentication>
-			<username>%EMAILADDRESS%</username>
-		</incomingServer>
 		<outgoingServer type="smtp">
 			<hostname>smtp.{{ item.name }}</hostname>
 			<port>465</port>
@@ -32,7 +25,7 @@
 			<authentication>password-cleartext</authentication>
 			<username>%EMAILADDRESS%</username>
 		</outgoingServer>
-		<documentation url="http://autoconfig.{{ item.name }}">
+		<documentation url="https://autoconfig.{{ item.name }}">
 			<descr lang="en">Mail settings and client configuration</descr>
 		</documentation>
 	</emailProvider>
