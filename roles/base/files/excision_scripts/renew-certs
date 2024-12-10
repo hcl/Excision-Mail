@@ -15,10 +15,9 @@ while read -r domain; do
 	fi
 	if [ $curr_status -eq 1 ]; then
 		had_error=1
-	else
-		ocspcheck -N -o "$ssl_home/$domain.ocsp" "$ssl_home/$domain.crt"
 	fi
-done < /etc/mail/mailname
+	break
+done < /etc/mail/vdomains
 
 if [ $had_error -ne 1 -a $acme_status -eq 0 ]; then
 	printf "\n### Reloading services\n"
