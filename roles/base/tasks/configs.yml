@@ -66,6 +66,7 @@
     owner: root
     group: wheel
   notify: set hostname
+  when: migration is False
 
 - name: create mail_subdomain file
   copy:
