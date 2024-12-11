@@ -48,11 +48,11 @@ pass in on egress proto tcp from any to any port { {{ pf_ports_protected.tcp | j
 	(max-src-conn {{ pf_maxconn }}, max-src-conn-rate {{ pf_maxconn }}/{{ pf_timelimit }}, \
 	overload <bruteforce> flush global)
 
-{% if pf_tcp_ports|length > 0 %}
+{% if pf_ports.tcp|length > 0 %}
 pass in on egress proto tcp to port { {{ pf_ports.tcp | join(', ') }} }
 {% endif %}
 
-{% if pf_udp_ports|length > 0 %}
+{% if pf_ports.udp|length > 0 %}
 pass in on egress proto udp to port { {{ pf_ports.udp | join(', ') }} }
 {% endif %}
 
