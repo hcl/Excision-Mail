@@ -70,9 +70,7 @@ listen on {{ pif }} \
 # this filter checks for spam vs ham on smtp port
 listen on egress \
 	tls \
-{% for domain in domains %}
-	pki {{ domain.name }} \
-{% endfor %}
+	pki {{ domains[0].name }} \
 {% if smtpd_legacy_protocols %}
 	protocols "legacy" ciphers "compat" \
 {% endif %}
@@ -82,9 +80,7 @@ listen on egress \
 # this filter signs the outgoing emails using the rspamd dkim_signing module
 listen on egress port smtps \
 	smtps \
-{% for domain in domains %}
-	pki {{ domain.name }} \
-{% endfor %}
+	pki {{ domains[0].name }} \
 {% if smtpd_legacy_protocols %}
 	protocols "legacy" ciphers "compat" \
 {% endif %}
@@ -93,9 +89,7 @@ listen on egress port smtps \
 	filter rspamd
 listen on egress port submission \
 	tls-require \
-{% for domain in domains %}
-	pki {{ domain.name }} \
-{% endfor %}
+	pki {{ domains[0].name }} \
 {% if smtpd_legacy_protocols %}
 	protocols "legacy" ciphers "compat" \
 {% endif %}
