@@ -103,19 +103,14 @@
 
 - name: add login.conf class
   copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    src: "{{ item }}"
+    dest: "/etc/login.conf.d"
     force: true
     owner: root
     group: wheel
     mode: '0644'
-  loop:
-    - src: dovecot.login.conf
-      dest: /etc/login.conf.d/dovecot
-    - src: mysqld.login.conf
-      dest: /etc/login.conf.d/mysqld
-    - src: rspamd.login.conf
-      dest: /etc/login.conf.d/rspamd
+  with_fileglob:
+    - login.conf.d/*
   notify: rebuild login database
 
 - name: add daily-report cron job
