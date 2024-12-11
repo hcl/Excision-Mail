@@ -12,14 +12,6 @@ ssl = required
 ssl_cert = </etc/excision/ssl/{{ domains[0].name }}.fullchain.pem
 ssl_key = </etc/excision/ssl/private/{{ domains[0].name }}.key
 
-{% for domain in domains[1:] %}
-local_name imap.{{ domain.name }} {
-	ssl_cert = </etc/excision/ssl/{{ domain.name }}.crt
-	ssl_key = </etc/excision/ssl/private/{{ domain.name }}.key
-}
-
-{% endfor %}
-
 # If key file is password protected, give the password here. Alternatively
 # give it when starting dovecot with -p parameter. Since this file is often
 # world-readable, you may want to place this setting instead to a different
