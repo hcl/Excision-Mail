@@ -5,7 +5,7 @@
 		<displayName>Excision Mail - {{ domains[0].name }}</displayName>
 		<displayShortName>Excision</displayShortName>
 		<incomingServer type="imap">
-			<hostname>{{ main_subdomain }}.{{ domains[0].name }}</hostname>
+			<hostname>{{ mail_subdomain }}.{{ domains[0].name }}</hostname>
 			<port>993</port>
 			<socketType>SSL</socketType>
 			<authentication>password-cleartext</authentication>
