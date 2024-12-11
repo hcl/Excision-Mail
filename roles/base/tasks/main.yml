@@ -14,5 +14,8 @@
 - name: include configs
   import_tasks: configs.yml
 
+- name: include web configs
+  import_tasks: web.yml
+
 - name: flush_handlers
   meta: flush_handlers
