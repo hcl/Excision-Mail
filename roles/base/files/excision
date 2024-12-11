@@ -13,6 +13,7 @@ usage:  excision add-alias [alias@domainA.tldA] [user@domainB.tldB]
         excision ensure-dkim
         excision ensure-gpg
         excision ensure-zone [domain.tld]
+        excision failban-smtpd
         excision fix-perms
         excision gen-virtual
         excision gen-dane [mailname domain keytype]

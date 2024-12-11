@@ -18,6 +18,9 @@ printf "\n##### Pending acme certificates\n"
 printf "\n##### Pending user database checks\n"
 /usr/local/bin/excision check-userdb
 
+printf "\n##### Running failban for smtpd\n"
+/usr/local/bin/excision failban-smtpd
+
 if [ -f /etc/excision/spam/bigmailer-names  ]; then
 	printf "\n##### Fixing big mailers list\n"
 	smtpctl spf walk < /etc/excision/spam/bigmailer-names | pfctl -t bigmailers -T add -f -

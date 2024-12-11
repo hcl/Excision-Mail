@@ -1,0 +1,36 @@
+#!/bin/ksh
+
+. /usr/local/lib/excision/helpers/variables
+
+# Borrowed from https://dataswamp.org/~solene/2023-06-22-opensmtpd-block-attempts.html
+
+TRIES=10
+EXPIRE_DAYS=5
+
+whitelist_ip_file="$spam_home/whitelist_ip"
+
+awk -v tries="$TRIES" '
+        / smtp connected / {
+                ips[$6]=substr($9, 9)
+        }
+
+        / smtp authentication / && /result=permfail/ {
+                seen[ips[$6]]++
+        }
+
+        END {
+                for(ip in seen) {
+                        if(seen[ip] > tries) {
+                                print ip
+                        }
+                }
+        }' /var/log/maillog | xargs pfctl -v -T add -t bot
+
+# if the file exists, remove IPs listed there
+if [ -f $whitelist_ip ]
+then
+    cat $whitelist_ip | xargs pfctl -v -T delete -t bot
+fi
+
+# remove IPs from the table after $EXPIRE_DAYS days
+pfctl -v -t bot -T expire "$(( 60 * 60 * 24 * $EXPIRE_DAYS ))"
