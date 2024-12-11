@@ -37,13 +37,13 @@ server {
     # Autodiscover file for Microsoft
     location /Autodiscover/ {
 	rewrite ^/Autodiscover/(.*) /$1 break;
-    	root /Autodiscover/{{ item.name }};
+    	root /Autodiscover;
     }
 
     # Mozilla autoconfig
     location /mail/ {
         rewrite ^/mail/(.*) /$1 break;
-        root /mail/{{ item.name }};
+        root /mail;
     }
 
     # rest of the files are queried in their respective folders

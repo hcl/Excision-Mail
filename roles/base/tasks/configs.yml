@@ -20,22 +20,20 @@
 
 - name: create mozilla config directories
   file:
-    path: '/var/www/mail/{{ item.name }}/'
+    path: '/var/www/mail'
     state: directory
     owner: root
     group: wheel
     mode: '0755'
-  with_items: "{{ domains }}"
 
 # https://wiki.mozilla.org/Thunderbird:Autoconfiguration#Implementation
 - name: generate mozilla config files
   template:
     src: config-v1.1.xml.j2
-    dest: "/var/www/mail/{{ item.name }}/config-v1.1.xml"
+    dest: "/var/www/mail/config-v1.1.xml"
     owner: root
     group: wheel
     mode: '0644'
-  with_items: "{{ domains }}"
 
 - name: create autodiscover directories
   file:
@@ -51,11 +49,10 @@
 - name: generate autodiscover config files
   template:
     src: Autodiscover.xml.j2
-    dest: "/var/www/Autodiscover/{{ item.name }}/Autodiscover.xml"
+    dest: "/var/www/Autodiscover/Autodiscover.xml"
     owner: root
     group: wheel
     mode: '0644'
-  with_items: "{{ domains }}"
 
 - name: create hostname file
   copy:

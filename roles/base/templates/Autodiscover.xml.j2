@@ -2,21 +2,21 @@
 <Autodiscover xmlns="http://schemas.microsoft.com/exchange/autodiscover/responseschema/2006">
 	<Response xmlns="http://schemas.microsoft.com/exchange/autodiscover/outlook/responseschema/2006a">
 		<User>
-			<DisplayName>Excision Mail - {{ item.name }}</DisplayName>
+			<DisplayName>Excision Mail - {{ domains[0].name }}</DisplayName>
 		</User>
 		<Account>
 			<AccountType>email</AccountType>
 			<Action>settings</Action>
-			<ServiceHome>https://autodiscover.{{ item.name }}</ServiceHome>
+			<ServiceHome>https://autodiscover.{{ domains[0].name }}</ServiceHome>
 			<Protocol>
 				<Type>IMAP</Type>
-				<Server>imap.{{ item.name }}</Server>
+				<Server>{{ mail_subdomain }}.{{ domains[0].name }}</Server>
 				<Port>993</Port>
 				<LoginName></LoginName>
 			</Protocol>
 			<Protocol>
 				<Type>SMTP</Type>
-				<Server>smtp.{{ item.name }}</Server>
+				<Server>{{ mail_subdomain }}.{{ domains[0].name }}</Server>
 				<Port>465</Port>
 				<LoginName></LoginName>
 			</Protocol>
