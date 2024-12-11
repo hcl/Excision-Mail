@@ -25,25 +25,25 @@ server {
     # SMTP MTA Strict Transport Security
     location /.well-known/mta-sts.txt {
         rewrite ^/.well-known/(.*) /$1 break;
-        root /mta-sts;
+        root /excision/mta-sts;
     }
 
     # OpenPGP Web Key Directory
     location /.well-known/openpgpkey/{{ item.name }}/ {
         rewrite ^/.well-known/openpgpkey/{{ item.name }}/(.*) /$1 break;
-        root /openpgpkey/{{ item.name }};
+        root /excision/openpgpkey/{{ item.name }};
     }
 
     # Autodiscover file for Microsoft
     location /Autodiscover/ {
 	rewrite ^/Autodiscover/(.*) /$1 break;
-    	root /Autodiscover;
+    	root /excision/Autodiscover;
     }
 
     # Mozilla autoconfig
     location /mail/ {
         rewrite ^/mail/(.*) /$1 break;
-        root /mail;
+        root /excision/mail;
     }
 
     # rest of the files are queried in their respective folders

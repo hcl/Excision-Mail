@@ -20,14 +20,14 @@ chmod 2750 "$wks_home"
 : > "$spam_home/submission-address"
 # add each domains wks-submission address
 while read -r domain; do
-	mkdir -p "/var/www/openpgpkey/$domain"
-	ln -sfh "/var/www/openpgpkey/$domain" "$wks_home/$domain"
+	mkdir -p "$wks_web_home/$domain"
+	ln -sfh "$wks_web_home/$domain" "$wks_home/$domain"
 	echo "wks@$domain" >> "$spam_home/submission-address"
 done < /etc/mail/vdomains
 
 # make sure the web key directory exists as well
-mkdir -p /var/www/openpgpkey
-chown -R excision:excision /var/www/openpgpkey
+mkdir -p "$wks_web_home"
+chown -R excision:excision "$wks_web_home"
 
 # now do the bulk of the init using the excision account
 su -s /bin/sh excision -c "sh /var/excision-home/excision-wks-init"

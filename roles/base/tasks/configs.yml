@@ -10,49 +10,6 @@
     access_time: preserve
   with_items: "{{ base_config_dirs }}"
 
-- name: generate mta-sts.txt file
-  template:
-    src: mta-sts.txt.j2
-    dest: /var/www/mta-sts/mta-sts.txt
-    owner: root
-    group: wheel
-    mode: '0644'
-
-- name: create mozilla config directories
-  file:
-    path: '/var/www/mail'
-    state: directory
-    owner: root
-    group: wheel
-    mode: '0755'
-
-# https://wiki.mozilla.org/Thunderbird:Autoconfiguration#Implementation
-- name: generate mozilla config files
-  template:
-    src: config-v1.1.xml.j2
-    dest: "/var/www/mail/config-v1.1.xml"
-    owner: root
-    group: wheel
-    mode: '0644'
-
-- name: create autodiscover directories
-  file:
-    path: '/var/www/Autodiscover/'
-    state: directory
-    owner: root
-    group: wheel
-    mode: '0755'
-
-# https://github.com/gronke/email-autodiscover/blob/master/mail/autodiscover.xml
-# https://docs.microsoft.com/en-us/previous-versions/office/office-2010/cc511507(v=office.14)?redirectedfrom=MSDN#Anchor_3
-- name: generate autodiscover config files
-  template:
-    src: Autodiscover.xml.j2
-    dest: "/var/www/Autodiscover/Autodiscover.xml"
-    owner: root
-    group: wheel
-    mode: '0644'
-
 - name: create hostname file
   copy:
     content: |

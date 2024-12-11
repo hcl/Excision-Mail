@@ -33,7 +33,7 @@ su -s /bin/sh excision -c "gpg-wks-server --cron"
 # but it feels a little over the top, for now lets try to see what
 # GnuPG has in store and what its ramifications are
 # there are no drawbacks to not cleaning, so this is not a high priority
-#find /var/www/openpgpkey/*/pending/ -type f -delete
+#find /var/www/excision/openpgpkey/*/pending/ -type f -delete
 
 
 # We are now going to start showing emails stats, which is a whole

@@ -7,6 +7,7 @@ user_home="/etc/excision/users"
 spam_home="/etc/excision/spam"
 
 wks_home="/var/lib/gnupg/wks"
+wks_web_home="/var/www/excision/openpgpkey"
 
 emhome="/var/excision-home"
 empasswd="/var/excision-passwd"
