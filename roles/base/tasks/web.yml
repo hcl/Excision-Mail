@@ -1,43 +1,48 @@
 ---
-- name: generate mta-sts.txt file
-  template:
-    src: mta-sts.txt.j2
-    dest: /var/www/excision/mta-sts/mta-sts.txt
-    owner: root
-    group: wheel
-    mode: '0644'
-
-- name: create mozilla config directories
+- name: create web root directory
   file:
-    path: '/var/www/excision/mail'
+    path: "{{ base_web_config_dirs.root.path }}"
     state: directory
     owner: root
     group: wheel
-    mode: '0755'
+    mode: "{{ base_web_config_dirs.root.perm }}"
+    modification_time: preserve
+    access_time: preserve
+
+- name: create web subdirectories
+  file:
+    path: "{{ base_web_config_dirs.root.path }}/{{ item.name }}"
+    state: directory
+    owner: root
+    group: wheel
+    mode: "{{ item.perm }}"
+    modification_time: preserve
+    access_time: preserve
+  with_items: "{{ base_web_config_dirs.subdir }}"
+
+- name: generate mta-sts.txt file
+  template:
+    src: mta-sts.txt.j2
+    dest: "{{ base_web_config_dirs.root.path }}/mta-sts/mta-sts.txt"
+    owner: root
+    group: wheel
+    mode: '0644'
 
 # https://wiki.mozilla.org/Thunderbird:Autoconfiguration#Implementation
 - name: generate mozilla config files
   template:
     src: config-v1.1.xml.j2
-    dest: "/var/www/excision/mail/config-v1.1.xml"
+    dest: "{{ base_web_config_dirs.root.path }}/mail/config-v1.1.xml"
     owner: root
     group: wheel
     mode: '0644'
-
-- name: create autodiscover directories
-  file:
-    path: '/var/www/excision/Autodiscover/'
-    state: directory
-    owner: root
-    group: wheel
-    mode: '0755'
 
 # https://github.com/gronke/email-autodiscover/blob/master/mail/autodiscover.xml
 # https://docs.microsoft.com/en-us/previous-versions/office/office-2010/cc511507(v=office.14)?redirectedfrom=MSDN#Anchor_3
 - name: generate autodiscover config files
   template:
     src: Autodiscover.xml.j2
-    dest: "/var/www/excision/Autodiscover/Autodiscover.xml"
+    dest: "{{ base_web_config_dirs.root.path }}/Autodiscover/Autodiscover.xml"
     owner: root
     group: wheel
     mode: '0644'
