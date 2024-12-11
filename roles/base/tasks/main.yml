@@ -11,11 +11,11 @@
 - name: include scripts
   import_tasks: scripts.yml
 
-- name: include configs
-  import_tasks: configs.yml
-
 - name: include web configs
   import_tasks: web.yml
+
+- name: include configs
+  import_tasks: configs.yml
 
 - name: flush_handlers
   meta: flush_handlers
