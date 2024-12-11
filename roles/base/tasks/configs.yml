@@ -37,12 +37,11 @@
 
 - name: create autodiscover directories
   file:
-    path: '/var/www/Autodiscover/{{ item.name }}/'
+    path: '/var/www/Autodiscover/'
     state: directory
     owner: root
     group: wheel
     mode: '0755'
-  with_items: "{{ domains }}"
 
 # https://github.com/gronke/email-autodiscover/blob/master/mail/autodiscover.xml
 # https://docs.microsoft.com/en-us/previous-versions/office/office-2010/cc511507(v=office.14)?redirectedfrom=MSDN#Anchor_3
