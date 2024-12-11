@@ -1,4 +1,0 @@
----
-pf_udp_ports: "{% if install_type != 'minimal' %}{{ pf_default_udp_ports + pf_service_udp_ports + pf_extra_udp_ports }}{% else %}{{ pf_default_udp_ports + pf_extra_udp_ports }}{% endif %}"
-pf_tcp_ports: "{% if install_type != 'minimal' %}{{ pf_default_tcp_ports + pf_service_tcp_ports + pf_extra_tcp_ports }}{% else %}{{ pf_default_tcp_ports + pf_extra_tcp_ports }}{% endif %}"
-pf_tcp_ports_protected: "{{ pf_default_tcp_ports_protected + pf_extra_tcp_ports_protected }}"

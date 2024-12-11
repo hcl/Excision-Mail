@@ -1,6 +1,65 @@
 ---
 pf_ssh_port: ssh
 
+pf_default_ports:
+  normal:
+    tcp:
+      - smtp
+      - http
+      - https
+    udp: []
+  protected:
+    tcp:
+      - "{{ pf_ssh_port }}"
+      - submission
+      - smtps
+      - imaps
+      - sieve
+    udp: []
+
+pf_full_ports:
+  normal:
+    tcp:
+      - domain
+    udp:
+      - domain
+
+pf_extra_ports:
+  normal:
+    tcp: []
+    udp: []
+  protected:
+    tcp: []
+    udp: []
+
+pf_udp_ports_constructed: >-
+  {% if install_type != 'minimal' %}
+  {{ pf_default_ports.normal.udp + pf_full_ports.normal.udp + pf_extra_ports.normal.udp }}
+  {% else %}
+  {{ pf_default_ports.normal.udp + pf_extra_ports.normal.udp }}
+  {% endif %}
+
+pf_tcp_ports_constructed: >-
+  {% if install_type != 'minimal' %}
+  {{ pf_default_ports.normal.tcp + pf_full_ports.normal.tcp + pf_extra_ports.normal.tcp }}
+  {% else %}
+  {{ pf_default_ports.normal.tcp + pf_extra_ports.normal.tcp }}
+  {% endif %}
+
+pf_tcp_ports_protected_constructed: >-
+  {% if install_type != 'minimal' %}
+  {{ pf_default_ports.protected.tcp + pf_extra_ports.protected.tcp }}
+  {% else %}
+  {{ pf_default_ports.protected.tcp + pf_extra_ports.protected.tcp }}
+  {% endif %}
+
+pf_ports:
+  udp: "{{ pf_udp_ports_constructed|from_yaml }}"
+  tcp: "{{ pf_tcp_ports_constructed|from_yaml }}"
+
+pf_ports_protected:
+  tcp: "{{ pf_tcp_ports_protected_constructed|from_yaml }}"
+
 pf_default_udp_ports: []
 
 pf_default_tcp_ports:
