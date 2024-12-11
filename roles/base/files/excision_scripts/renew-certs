@@ -8,7 +8,7 @@ echo "### Renewing acme certificates"
 acme_status=2
 had_error=0
 while read -r domain; do
-	acme-client -v -f "$ssl_home/acme-client.conf" "$mail_subdomain.$domain"
+	acme-client -v -f "$ssl_home/acme-client.conf" "$domain"
 	curr_status=$?
 	if [ $curr_status -eq 0 ]; then
 		acme_status=0
@@ -16,7 +16,6 @@ while read -r domain; do
 	if [ $curr_status -eq 1 ]; then
 		had_error=1
 	fi
-	break
 done < /etc/mail/vdomains
 
 if [ $had_error -ne 1 -a $acme_status -eq 0 ]; then
@@ -26,6 +25,7 @@ if [ $had_error -ne 1 -a $acme_status -eq 0 ]; then
 fi
 
 if [ $had_error -eq 1 ]; then
+	printf "\n#### Certificates renew failed\n"
 	exit 1
 fi
 exit $acme_status

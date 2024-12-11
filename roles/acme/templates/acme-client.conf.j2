@@ -22,16 +22,27 @@ authority buypass-test {
 }
 
 {% for domain in domains %}
-domain {{ mail_subdomain }}.{{ domain.name }} {
+domain {{ domain.name }} {
+{% if loop.index == 1 %}
+	domain name {{ mail_subdomain }}.{{ domain.name }}
 	alternative names { \
 {% for sdomain in subdomains %}
 		"{{ sdomain }}.{{ domain.name }}" \
 {% endfor %}
 	}
-	domain key "/etc/excision/ssl/private/{{ mail_subdomain }}.{{ domain.name }}.key" {% if domain.ssl_type is defined and domain.ssl_type == 'ecc' %}ecdsa{% endif %}
-	domain certificate "/etc/excision/ssl/{{ mail_subdomain }}.{{ domain.name }}.crt"
-	domain chain certificate "/etc/excision/ssl/{{ mail_subdomain }}.{{ domain.name }}.chain.pem"
-	domain full chain certificate "/etc/excision/ssl/{{ mail_subdomain }}.{{ domain.name }}.fullchain.pem"
+{% else %}
+	domain name {{ required_subdomains[0] }}.{{ domain.name }}
+	alternative names { \
+{% for sdomain in required_subdomains[1:] %}
+		"{{ sdomain }}.{{ domain.name }}" \
+{% endfor %}
+	}
+{% endif %}
+	domain key "/etc/excision/ssl/private/{{ domain.name }}.key" {% if domain.ssl_type is defined and domain.ssl_type == 'ecc' %}ecdsa{% endif %}
+
+	domain certificate "/etc/excision/ssl/{{ domain.name }}.crt"
+	domain chain certificate "/etc/excision/ssl/{{ domain.name }}.chain.pem"
+	domain full chain certificate "/etc/excision/ssl/{{ domain.name }}.fullchain.pem"
 	sign with letsencrypt
 }
 

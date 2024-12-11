@@ -7,10 +7,8 @@ smtp max-message-size {{ max_attachment_size }}M
 smtp sub-addr-delim '{{ username_delimiter }}'
 
 # actual mail handling
-{% for domain in domains %}
-pki {{ domain.name }} cert  "/etc/excision/ssl/{{ mail_subdomain }}.{{ domain.name }}.fullchain.pem"
-pki {{ domain.name }} key   "/etc/excision/ssl/private/{{ mail_subdomain }}.{{ domain.name }}.key"
-{% endfor %}
+pki {{ domains[0].name }} cert  "/etc/excision/ssl/{{ domains[0].name }}.fullchain.pem"
+pki {{ domains[0].name }} key   "/etc/excision/ssl/private/{{ domains[0].name }}.key"
 
 # Filters
 #

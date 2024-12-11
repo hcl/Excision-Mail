@@ -7,6 +7,8 @@
     group: wheel
     mode: '0644'
   with_items: "{{ domains }}"
+  loop_control:
+    index_var: domain_index
   notify: restart nginx
 
 - name: symlink domain configs

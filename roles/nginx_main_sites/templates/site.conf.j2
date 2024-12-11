@@ -2,12 +2,14 @@ server {
     listen		443 ssl;
     listen		[::]:443 ssl;
 
-    ssl_certificate /etc/excision/ssl/{{ mail_subdomain }}.{{ item.name }}.fullchain.pem;
-    ssl_certificate_key /etc/excision/ssl/private/{{ mail_subdomain }}.{{ item.name }}.key;
+    ssl_certificate /etc/excision/ssl/{{ item.name }}.fullchain.pem;
+    ssl_certificate_key /etc/excision/ssl/private/{{ item.name }}.key;
     ssl_stapling on;
     ssl_stapling_verify on;
 
+{% if domain_index == 0 %}
     server_name {{ mail_subdomain }}.{{ item.name }};
+{% endif %}
 {% for sdomain in required_subdomains %}
     server_name {{ sdomain }}.{{ item.name }};
 {% endfor %}
@@ -38,7 +40,7 @@ server {
     	root /Autodiscover/{{ item.name }};
     }
 
-    # OpenPGP Web Key Directory
+    # Mozilla autoconfig
     location /mail/ {
         rewrite ^/mail/(.*) /$1 break;
         root /mail/{{ item.name }};
