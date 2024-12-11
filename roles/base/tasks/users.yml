@@ -1,8 +1,23 @@
 ---
+- name: check if excision group exists
+  getent:
+    database: group
+    key: excision
+  register: excision_group
+  ignore_errors: true
+
 - name: make excision group
   group:
     name: excision
     gid: 2000
+  when: excision_group.failed or excision_group is not defined
+
+- name: check if excision user exists
+  getent:
+    database: passwd
+    key: excision
+  register: excision_user
+  ignore_errors: true
 
 - name: make excision user
   user:
@@ -14,6 +29,7 @@
     login_class: daemon
     shell: /sbin/nologin
     home: /var/excision
+  when: excision_user.failed or excision_user is not defined
 
 - name: disable logins for excision user
   file:
