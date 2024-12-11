@@ -4,3 +4,4 @@
     name: dovecot
     enabled: true
     state: restarted
+  when: not (migration|bool)
