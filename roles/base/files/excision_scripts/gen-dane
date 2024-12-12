@@ -9,14 +9,13 @@ set -e -u -o pipefail
 # exists in the /etc/excision/nsd folder
 
 if [ "$#" -ne 3 ]; then
-	echo "usage: excision $(basename $0) [mail_subdomain] [domain] [keytype]"
+	echo "usage: excision $(basename $0) [domain] [keytype]"
 	exit 255
 fi
 
-mail_subdomain="$1"
-domain="$2"
+domain="$1"
 key_type="$3"
-current_domain="${mail_subdomain}.${domain}"
+current_domain="${domain}"
 
 dane_zone_file="$nsd_home/$domain.dane.zone"
 dane_zone_file_tmp="$dane_zone_file".tmp
