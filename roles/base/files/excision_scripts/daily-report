@@ -28,7 +28,7 @@ if [ -f /etc/excision/spam/bigmailer-names  ]; then
 fi
 
 printf "\n##### Cleaning pending gpg requests\n"
-su -s /bin/sh excision -c "gpg-wks-server --cron"
+su -s /bin/sh excision -c "/usr/local/bin/gpg-wks-server --cron"
 # a potential alternative is to just manually delete all pending files
 # but it feels a little over the top, for now lets try to see what
 # GnuPG has in store and what its ramifications are
