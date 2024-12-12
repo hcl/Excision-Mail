@@ -3,4 +3,4 @@
   service:
     name: rspamd
     state: restarted
-  when: migration|bool
+  when: not (migration|bool)

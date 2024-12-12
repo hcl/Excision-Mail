@@ -25,7 +25,7 @@ base_config_dirs:
 
 base_web_config_dirs:
   root:
-    path: "/var/www/excison"
+    path: "/var/www/excision"
     perm: "0755"
   subdir:
     - { name: "mta-sts", perm: "0755" }
