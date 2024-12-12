@@ -3,7 +3,7 @@
 . /usr/local/lib/excision/helpers/variables
 
 if [ "$#" -eq 0 ]; then
-	echo "Error: no big mailer domain specified"
+	echo "usage: $0 [domain.tld]"
 	exit 255
 fi
 

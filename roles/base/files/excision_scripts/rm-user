@@ -1,0 +1,49 @@
+#!/bin/sh
+
+# This script removes a user from the mail system
+# It removes the user from the passwd file and their data file
+# The script should be used with caution as it permanently removes user data
+
+. /usr/local/lib/excision/helpers/variables
+
+if [ "$#" -eq 0 ]; then
+    echo "Incorrect number of arguments to rm-user: user@domain"
+    exit 255
+fi
+
+user="$1"
+
+# Check if user exists
+user_out=$(sh "$emscripts/helpers/check-user" "$user")
+user_status=$?
+
+case $user_status in
+    0)
+        echo "User $user does not exist in the system"
+        exit 1
+        ;;
+    2)
+        echo "Cannot remove $user - it is an alias for $user_out"
+        exit 2
+        ;;
+    1)
+        echo "Removing user $user from the system"
+        ;;
+    *)
+        echo "Unknown error occurred"
+        exit 3
+        ;;
+esac
+
+# Remove user from passwd file
+sed -i.bak "/$user:/d" "$user_home/passwd"
+
+# Remove user data file if it exists
+if [ -f "$user_home/user-data/$user" ]; then
+    rm "$user_home/user-data/$user"
+fi
+
+# Regenerate virtual databases
+sh "$emscripts/gen-virtual"
+
+echo "User $user has been removed from the system"

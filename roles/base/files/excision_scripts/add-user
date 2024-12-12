@@ -7,8 +7,8 @@
 
 . /usr/local/lib/excision/helpers/variables
 
-if [ "$#" -eq 0 ]; then
-	echo "Incorrect number of arguments to add-user: user@domain"
+if [ "$#" -ne 1 ]; then
+	echo "Usage: $0 [user@domain]"
 	exit 255
 fi
 

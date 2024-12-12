@@ -6,7 +6,7 @@
 
 # make sure that we are only getting two inputs
 if [ "$#" -ne 2 ]; then
-	echo "Incorrect number of arguments to add-alias: alias@domain2 user@domain1"
+	echo "Usage: $0 [alias@domain2] [user@domain1]"
 	exit 255
 fi
 

@@ -9,7 +9,7 @@ set -e -u -o pipefail
 # exists in the /etc/excision/nsd folder
 
 if [ "$#" -ne 3 ]; then
-	echo "Incorrect number of arguments to gen-dane: [mail_subdomain] [domain] [keytype]"
+	echo "Usage: $0 [mail_subdomain] [domain] [keytype]"
 	exit 255
 fi
 

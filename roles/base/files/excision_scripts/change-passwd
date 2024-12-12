@@ -3,7 +3,7 @@
 . /usr/local/lib/excision/helpers/variables
 
 if [ "$#" -ne 1 ]; then
-	echo "Incorrect number of arguments to change-passwd: user@domain"
+	echo "Usage: $0 [user@domain]"
 	exit 255
 fi
 
