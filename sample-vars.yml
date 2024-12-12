@@ -24,6 +24,9 @@ domains:
     dkim_selector:
       rsa: excisionRSA
       ed25519: excisionED
+    rfc2142_aliases:
+      enable: true
+      user: "{{ admin }}"
   #- name: domain2.tld
   #  dns: false
   #- name: domain3.tld3
