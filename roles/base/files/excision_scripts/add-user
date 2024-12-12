@@ -8,7 +8,7 @@
 . /usr/local/lib/excision/helpers/variables
 
 if [ "$#" -ne 1 ]; then
-	echo "Usage: $0 [user@domain]"
+	echo "usage: excision $(basename $0) [user@domain]"
 	exit 255
 fi
 

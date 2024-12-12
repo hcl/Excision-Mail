@@ -6,7 +6,7 @@
 
 # make sure that we are only getting two inputs
 if [ "$#" -ne 2 ]; then
-	echo "Usage: $0 [alias@domain2] [user@domain1]"
+	echo "usage: excision $(basename $0) [alias@domain2] [user@domain1]"
 	exit 255
 fi
 

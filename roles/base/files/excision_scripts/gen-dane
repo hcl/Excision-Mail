@@ -9,7 +9,7 @@ set -e -u -o pipefail
 # exists in the /etc/excision/nsd folder
 
 if [ "$#" -ne 3 ]; then
-	echo "Usage: $0 [mail_subdomain] [domain] [keytype]"
+	echo "usage: excision $(basename $0) [mail_subdomain] [domain] [keytype]"
 	exit 255
 fi
 

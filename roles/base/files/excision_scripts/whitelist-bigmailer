@@ -3,7 +3,7 @@
 . /usr/local/lib/excision/helpers/variables
 
 if [ "$#" -eq 0 ]; then
-	echo "usage: $0 [domain.tld]"
+	echo "usage: excision $(basename $0) [domain.tld]"
 	exit 255
 fi
 
