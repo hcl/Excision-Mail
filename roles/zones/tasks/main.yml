@@ -14,7 +14,7 @@
   with_items: "{{ domains }}"
 
 - name: generate dkim certificates # noqa no-changed-when
-  command: excision ensure-dkim
+  command: excision ensure-dkim excision
   when: migration is false
 
 - name: generate zone final files # noqa no-changed-when

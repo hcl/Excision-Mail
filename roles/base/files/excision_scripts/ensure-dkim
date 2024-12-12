@@ -2,67 +2,76 @@
 
 . /usr/local/lib/excision/helpers/variables
 
+# Check if selector prefix is provided
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 [selector_prefix] [single|all]"
+    exit 1
+fi
+
+selector_prefix=${1:-excision}
+
 # create a public key-pair for dkim for each domain
-# and also for davical for each domain
-
 while read -r domain ; do
-	. $dkim_home/config/$domain
-	for selector_prefix in excision; do
-		eval selector_rsa=\"\$${selector_prefix}_selector_rsa\"
-		eval selector_ed25519=\"\$${selector_prefix}_selector_ed25519\"
+    . "$dkim_home/config/$domain"
+    eval selector_rsa=\"\$${selector_prefix}_selector_rsa\"
+    eval selector_ed25519=\"\$${selector_prefix}_selector_ed25519\"
 
-		printf "Current rsa selector for %s : %s\n" "$selector_prefix" "$selector_rsa"
-		printf "Current ed25519 selector for %s : %s\n" "$selector_prefix" "$selector_ed25519"
+    printf "Current rsa selector for %s : %s\n" "$selector_prefix" "$selector_rsa"
+    printf "Current ed25519 selector for %s : %s\n" "$selector_prefix" "$selector_ed25519"
 
-		key_ed="$dkim_home/private/$domain.${selector_ed25519}.ed25519.key"
-		key_rsa="$dkim_home/private/$domain.${selector_rsa}.rsa.key"
-		pub_ed="$dkim_home/$domain.${selector_ed25519}.ed25519.pub"
-		pub_rsa="$dkim_home/$domain.${selector_rsa}.rsa.pub"
-		txt_ed="$dkim_home/$domain.${selector_ed25519}.ed25519.txt"
-		txt_rsa="$dkim_home/$domain.${selector_rsa}.rsa.txt"
+    key_ed="$dkim_home/private/$domain.${selector_ed25519}.ed25519.key"
+    key_rsa="$dkim_home/private/$domain.${selector_rsa}.rsa.key"
+    pub_ed="$dkim_home/$domain.${selector_ed25519}.ed25519.pub"
+    pub_rsa="$dkim_home/$domain.${selector_rsa}.rsa.pub"
+    txt_ed="$dkim_home/$domain.${selector_ed25519}.ed25519.txt"
+    txt_rsa="$dkim_home/$domain.${selector_rsa}.rsa.txt"
 
-		printf "### Generating/Checking DKIM certificates for domain: %s\n" "$domain"
+    printf "### Generating/Checking DKIM certificates for domain: %s\n" "$domain"
 
-		openssl genrsa -out "$key_rsa" 4096
-		openssl genpkey -algorithm ed25519 -outform PEM -out "$key_ed"
+    if [ ! -f "$key_rsa" ]; then
+        openssl genrsa -out "$key_rsa" 4096
+    fi
+    if [ ! -f "$key_ed" ]; then
+        openssl genpkey -algorithm ed25519 -outform PEM -out "$key_ed"
+    fi
 
-		openssl rsa -in "$key_rsa" -pubout -out "$pub_rsa"
-		openssl pkey -in "$key_ed" -pubout -out "$pub_ed"
+    if [ ! -f "$pub_rsa" ]; then
+        openssl rsa -in "$key_rsa" -pubout -out "$pub_rsa"
+    fi
+    if [ ! -f "$pub_ed" ]; then
+        openssl pkey -in "$key_ed" -pubout -out "$pub_ed"
+    fi
 
-		printf "\n\n### Creating txt record file from public key\n"
+    printf "\n\n### Creating txt record file from public key\n"
 
-		if [ "$selector_prefix" = "excision" ]; then
-			rsa_begin="${selector_rsa}._domainkey	IN	TXT	"
-			ed_begin="${selector_ed25519}._domainkey	IN	TXT	"
-			rsa_xtest="v=DKIM1;k=rsa;p="
-			ed_xtest="v=DKIM1;k=ed25519;p="
-		else
-			rsa_begin="${selector_rsa}._domainkey.dav	IN	TXT	"
-			ed_begin="${selector_ed25519}._domainkey.dav	IN	TXT	"
-			rsa_xtest="v=DKIM1;k=rsa;p="
-			ed_xtest="v=DKIM1;k=ed25519;p="
-		fi
+    if [ "$selector_prefix" = "excision" ]; then
+        rsa_begin="${selector_rsa}._domainkey	IN	TXT	"
+        ed_begin="${selector_ed25519}._domainkey	IN	TXT	"
+    else
+        rsa_begin="${selector_rsa}._domainkey.dav	IN	TXT	"
+        ed_begin="${selector_ed25519}._domainkey.dav	IN	TXT	"
+	fi
 
+	rsa_xtest="v=DKIM1;k=rsa;p="
+    ed_xtest="v=DKIM1;k=ed25519;p="
 
-		pkey_rsa=$(awk 'NR>2 {print last} {last=$0}' ORS='' "$pub_rsa")
-		pkey_ed=$(awk 'NR>2 {print last} {last=$0}' ORS='' "$pub_ed")
+    pkey_rsa=$(awk 'NR>2 {print last} {last=$0}' ORS='' "$pub_rsa")
+    pkey_ed=$(awk 'NR>2 {print last} {last=$0}' ORS='' "$pub_ed")
 
-		rsa_end=$(echo "$rsa_xtest$pkey_rsa;" | awk 'BEGIN {ORS=" "}{for (i=1;i<=length($0);i+=255) printf "\042%s\042 ",substr( $0, i, 255 ) } ')
-		ed_end=$(echo "$ed_xtest$pkey_ed;" | awk 'BEGIN {ORS=" "}{for (i=1;i<=length($0);i+=255) printf "\042%s\042 ",substr( $0, i, 255 ) } ')
+    rsa_end=$(echo "$rsa_xtest$pkey_rsa;" | awk 'BEGIN {ORS=" "}{for (i=1;i<=length($0);i+=255) printf "\042%s\042 ",substr( $0, i, 255 ) } ')
+    ed_end=$(echo "$ed_xtest$pkey_ed;" | awk 'BEGIN {ORS=" "}{for (i=1;i<=length($0);i+=255) printf "\042%s\042 ",substr( $0, i, 255 ) } ')
 
-		printf "%s\t( %s)\n" "$rsa_begin" "$rsa_end" | tee "$txt_rsa"
-		printf "%s\t( %s)\n" "$ed_begin" "$ed_end" | tee "$txt_ed"
+    printf "%s\t( %s)\n" "$rsa_begin" "$rsa_end" | tee "$txt_rsa"
+    printf "%s\t( %s)\n" "$ed_begin" "$ed_end" | tee "$txt_ed"
 
+    printf "\n\n### Ensuring correct permissions on all three files\n"
+    sh "$vfix" root _rspamd 640 "$key_ed"
+    sh "$vfix" root _rspamd 640 "$key_rsa"
+    sh "$vfix" root wheel 644 "$pub_ed"
+    sh "$vfix" root wheel 644 "$pub_rsa"
+    sh "$vfix" root wheel 644 "$txt_ed"
+    sh "$vfix" root wheel 644 "$txt_rsa"
 
-		printf "\n\n### Ensuring correct permissions on all three files\n"
-		sh "$vfix" root _rspamd 640 "$key_ed"
-		sh "$vfix" root _rspamd 640 "$key_rsa"
-		sh "$vfix" root wheel 644 "$pub_ed"
-		sh "$vfix" root wheel 644 "$pub_rsa"
-		sh "$vfix" root wheel 644 "$txt_ed"
-		sh "$vfix" root wheel 644 "$txt_rsa"
-
-	done
 done < "/etc/mail/vdomains"
 
 rcctl reload rspamd
