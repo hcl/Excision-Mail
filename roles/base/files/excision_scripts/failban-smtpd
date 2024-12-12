@@ -27,9 +27,9 @@ awk -v tries="$TRIES" '
         }' /var/log/maillog | xargs pfctl -v -T add -t bot
 
 # if the file exists, remove IPs listed there
-if [ -f $whitelist_ip ]
+if [ -f "$whitelist_ip_file" ]
 then
-    cat $whitelist_ip | xargs pfctl -v -T delete -t bot
+    cat "$whitelist_ip_file" | xargs pfctl -v -T delete -t bot
 fi
 
 # remove IPs from the table after $EXPIRE_DAYS days
